@@ -8,7 +8,7 @@ Modélisation et peuplement d'une base de donnée pour un site d'e-commerce.
 * La [modélisation](https://gaufre.informatique.univ-paris-diderot.fr/EmileRolley/bd6-project/blob/master/pdf/design.pdf)
 * Le [diagramme ER](https://gaufre.informatique.univ-paris-diderot.fr/EmileRolley/bd6-project/blob/master/images/ERD.png)
 
-## Auteurs 🧑‍💻
+## Auteurs 🧘
 
 | Nom      | Prénom | GitLab ID                                                                     | Numéro étudiant |
 |----------|--------|-------------------------------------------------------------------------------|-----------------|
