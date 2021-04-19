@@ -10,7 +10,7 @@ dpi: 160
 geometry:
 - left=25mm
 - right=25mm
-- bottom=29mm
+- bottom=25mm
 - top=25mm
 ---
 
@@ -34,8 +34,6 @@ De plus, **seules les copies imprimées sont retournables**.
 La première étape la modélisation consiste à la création d'un diagramme E/R :
 
 ![Diagramme E/R.](../images/ER-diagram.png)
-
-*Les relations non nommées sont uniquement là pour montrer les cardinalités des couples (PK, FK), où PK signifie Primary Key et FK signifie Foreign Key.*
 
 Complété des contraintes externes suivantes :
 
@@ -67,6 +65,9 @@ et `Unavailable`.
 
 ![Diagramme E/R après la première restructuration
 (en vert les attributs ajoutés).](../images/restructuration1.png)
+
+*Pour des raisons de lisibilités, les relations sans attributs de cardinalités (`(1-1)` $\rightarrow$ `...`)
+ et (`(0-1)` $\rightarrow$ `...`) sont égalements supprimées.*
 
 Les contraintes suivantes sont également ajoutées :
 
@@ -116,95 +117,89 @@ Finalement, nous avons le schéma relationnel suivant :
 
 $\texttt{Photographer(\underline{photographer\_id}, firstname, lastname, phone)}$
 
-> *`Photographer[firstname]` not Null*
->
-> *`Photographer[lastname]` not Null*
+> *`Photographer[firstname, lastname]` not `NULL`*
 
 $\texttt{Photography(\underline{pid}, title, photographer\_id, url, curr\_price, creation\_date)}$
 
-> *`Photography[title]` not Null*
->
-> *`Photography[photographer_id]` Not Null*
->
 > *`Photography[photographer_id]` $\subseteq$ `Photographer[photographer_id]`*
 >
-> *`Photography[url]` not Null*
+> *`Photography[title, photographer_id, url, curr_price]` not `NULL`*
 >
-> *`Photography[curr_price]` > `0` and not Null*
+> *`Photography[curr_price]` $>$ `0`*
 
 $\texttt{PhotographyCopy(\underline{copy\_id}, pid, type, format, size, is\_available, deadline, quantity)}$
 
-> *`PhotographyCopy[pid]` Not Null*
->
 > *`PhotographyCopy[pid]` $\subseteq$ `Photography[pid]`*
 >
-> *`PhotographyCopy[type]` >= `0` && `PhotographyCopy[type]` <= `1` && not Null*
+> *`PhotographyCopy[pid, type]` not `NULL`*
 >
-> *`PhotographyCopy[type]` = `1` $\rightarrow$ `PhotographyCopy[format]` not Null*
+> *`0` $\leq$ `PhotographyCopy[type]` $\leq$ `1`*
 >
-> *`PhotographyCopy[type]` = `0` $\rightarrow$ `PhotographyCopy[size]` not Null*
+> *(`PhotographyCopy[type]` $=$ `1`) $\rightarrow$ (`PhotographyCopy[format]` not `NULL`)*
 >
-> *`PhotographyCopy[is_available]` = true $\rightarrow$ `PhotographyCopy[quantity]` > 0*
+> *(`PhotographyCopy[type]` $=$ `0`) $\rightarrow$ (`PhotographyCopy[size]` not `NULL`)*
 >
-> *`PhotographyCopy[is_available]` = false $\rightarrow$ `PhotographyCopy[quantity]` = 0*
+> *`PhotographyCopy[is_available]` $\rightarrow$ (`PhotographyCopy[quantity]` > `0`)*
 >
-> *`PhotographyCopy[deadline]` not Null $\rightarrow$ `PhotographyCopy[is_available]` = false*
+> *$\neg$`PhotographyCopy[is_available]` $\rightarrow$ (`PhotographyCopy[quantity]` $=$ `0`)*
+>
+> *(`PhotographyCopy[deadline]` not `NULL`) $\rightarrow$ ($\neg$`PhotographyCopy[is_available]`)*
 
 $\texttt{PriceHistory(\underline{pid, date}, price)}$
 
-> *`PriceHistory[price]` > `0` && not Null*
->
 > *`PriceHistory[pid]` $\subseteq$ `Photography[pid]`*
+>
+> *(`PriceHistory[price]` $>$ `0`) $\wedge$ (`PriceHistory[price]` not `NULL`)*
 
 $\texttt{Address(\underline{aid}, street\_nb, street\_name, city, departement)}$
 
-> *`Address[street_nb, street_name, city, departement] not Null*
+> *`Address[street_nb, street_name, city, departement]` not `NULL`*
 >
-> *`Adress[street_nb]` >= `0`*
+> *`Adress[street_nb]` $\geq$ `0`*
 
 $\texttt{Client(\underline{email}, password, firstname, lastname, address, phone, registration\_date}$
 
-> *`Client[adresse, password, firstname, lastname, registration_date]` Not Null*
->
 > *`Client[adresse]` $\subseteq$ `Address[aid]`*
+>
+> *`Client[adresse, password, firstname, lastname, registration_date]` not `NULL`*
 
 $\texttt{Review(\underline{email, copy\_id}, rate, comment, date)}$
 
-> *`Review[rate]` >= `0` && `Review[rate]` <= `10` && `Review[rate] not Null*
->
 > *`Review[email]` $\subseteq$ `Client[email]`*
 >
 > *`Review[copy_id]` $\subseteq$ `PhotographyCopy[copy_id]`*
+>
+> *(`0` $\leq$ `Review[rate]` $\leq$ `10`) $\wedge$ (`Review[rate] not `NULL`)*
 
 $\texttt{Order(\underline{cmd\_id}, email , date, shipping\_addr, billing\_addr, is\_payable\_by\_cheque, is\_payed)}$
 
-> *`Order[email, date, shipping_addr, is_payable_by_cheque, is_payed]` Not Null*
->
 > *`Order[email]` $\subseteq$ `Client[email]`*
 >
 > *`Order[shipping_addr]` $\subseteq$ `Address[aid]`*
 >
 > *`Order[billing_addr]` $\subseteq$ `Address[aid]`*
+>
+> *`Order[email, date, shipping_addr, is_payable_by_cheque, is_payed]` not `NULL`*
 
 $\texttt{ShoppingCartElem(\underline{elem\_id}, email, copy\_id, quantity, cmd\_id, status, shipping\_date, delivery\_date)}$
 
-> *`ShoppingCartElem[email, copy_id, quantity, status]` not Null*
+> *`ShoppingCartElem[email]` $\subseteq$ `Client[email]`*
 >
-> *`ShoppingCartElem[shipping_date]` <= `ShoppingCartElem[delivery_date]`*
+> *`ShoppingCartElem[copy_id]` $\subseteq$ `PhotographyCopy[copy_id]`*
 >
-> *`ShoppingCartElem[quantity]` > `0`*
+> *`ShoppingCartElem[cmd_id]` $\subseteq$ `Order[cmd_id]`*
 >
-> *`ShoppingCartElem[status]` >= `-1` && `ShoppingCartElem[status]` <= `4`*
+> *`ShoppingCartElem[email, copy_id, quantity, status]` not `NULL`*
 >
-> *`ShoppingCartElem[status]` >= 0 $\rightarrow$ `ShoppingCartElem[cmd_id] not NULL`*
+> *`ShoppingCartElem[shipping_date]` $\leq$ `ShoppingCartElem[delivery_date]`*
 >
-> *`ShoppingCartElem[status]` >= 2 $\rightarrow$ `ShoppingCartElem[shipping_date, delivery_date] not NULL`*
+> *`ShoppingCartElem[quantity]` $>$ `0`*
 >
-> *`ShoppingCartElem[email]` $\subseteq$ `Client[email]` && not Null*
+> *`-1` $\leq$ `ShoppingCartElem[status]` $\leq$ `4`*
 >
-> *`ShoppingCartElem[copy_id]` $\subseteq$ `PhotographyCopy[copy_id]` && not Null*
+> *(`ShoppingCartElem[status]` $\geq$ `0`) $\rightarrow$ (`ShoppingCartElem[cmd_id]` not `NULL`)*
 >
-> *`ShoppingCartElem[cmd_id]` $\subseteq$ `Order[cmd_id]`k*
+> *(`ShoppingCartElem[status]` $\geq$ `2`) $\rightarrow$ (`ShoppingCartElem[shipping_date, delivery_date]` not `NULL`)*
 
 $\texttt{Return(\underline{elem\_id, cmd\_id}, date, issue)}$
 
