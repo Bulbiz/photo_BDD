@@ -8,6 +8,12 @@ Modélisation et peuplement d'une base de donnée pour un site d'e-commerce.
 * La [modélisation](https://gaufre.informatique.univ-paris-diderot.fr/EmileRolley/bd6-project/blob/master/pdf/design.pdf)
 * Le [diagramme E/R](https://gaufre.informatique.univ-paris-diderot.fr/EmileRolley/bd6-project/blob/master/images/ERD.png)
 
+## Rendus 🏷
+
+* [`assignment1`](https://gaufre.informatique.univ-paris-diderot.fr/EmileRolley/bd6-project/tags/assignment1) correspond à la première version de la modélisation.
+* [`assignment2`](https://gaufre.informatique.univ-paris-diderot.fr/EmileRolley/bd6-project/tags/assignment2) correspond à la version finale de la modélisation.
+
+
 ## Auteurs 🧘
 
 | Nom      | Prénom | GitLab ID                                                                     | Numéro étudiant |
