@@ -95,7 +95,7 @@ Les contraintes suivantes sont alors ajoutées :
 * Les valeurs de `ShoppingCartElem.status` possèdent les même significations que pour `Oredered.status`,
 avec en plus :
   * $[0,4]$ $\rightarrow$ `Ordered`.
-  * 5 $\rightarrow$ `NotOredered`.
+  * -1 $\rightarrow$ `NotOrdered`.
 
 \newpage
 
@@ -116,32 +116,70 @@ Finalement, nous avons le schéma relationnel suivant :
 
 $\texttt{Photographer(\underline{photographer\_id}, firstname, lastname, phone)}$
 
+> *`Photographer[firstname]` not Null*
+>
+> *`Photographer[lastname]` not Null*
+
 $\texttt{Photography(\underline{pid}, title, photographer\_id, url, curr\_price, creation\_date)}$
 
+> *`Photography[title]` not Null*
+>
+> *`Photography[photographer_id]` Not Null*
+>
 > *`Photography[photographer_id]` $\subseteq$ `Photographer[photographer_id]`*
+>
+> *`Photography[url]` not Null*
+>
+> *`Photography[curr_price]` > `0` and not Null*
 
 $\texttt{PhotographyCopy(\underline{copy\_id}, pid, type, format, size, is\_available, deadline, quantity)}$
 
+> *`PhotographyCopy[pid]` Not Null*
+>
 > *`PhotographyCopy[pid]` $\subseteq$ `Photography[pid]`*
+>
+> *`PhotographyCopy[type]` >= `0` && `PhotographyCopy[type]` <= `1` && not Null*
+>
+> *`PhotographyCopy[type]` = `1` $\rightarrow$ `PhotographyCopy[format]` not Null*
+>
+> *`PhotographyCopy[type]` = `0` $\rightarrow$ `PhotographyCopy[size]` not Null*
+>
+> *`PhotographyCopy[is_available]` = true $\rightarrow$ `PhotographyCopy[quantity]` > 0*
+>
+> *`PhotographyCopy[is_available]` = false $\rightarrow$ `PhotographyCopy[quantity]` = 0*
+>
+> *`PhotographyCopy[deadline]` not Null $\rightarrow$ `PhotographyCopy[is_available]` = false*
 
 $\texttt{PriceHistory(\underline{pid, date}, price)}$
 
+> *`PriceHistory[price]` > `0` && not Null*
+>
 > *`PriceHistory[pid]` $\subseteq$ `Photography[pid]`*
 
 $\texttt{Address(\underline{aid}, street\_nb, street\_name, city, departement)}$
 
+> *`Address[street_nb, street_name, city, departement] not Null*
+>
+> *`Adress[street_nb]` >= `0`*
+
 $\texttt{Client(\underline{email}, password, firstname, lastname, address, phone, registration\_date}$
 
+> *`Client[adresse, password, firstname, lastname, registration_date]` Not Null*
+>
 > *`Client[adresse]` $\subseteq$ `Address[aid]`*
 
 $\texttt{Review(\underline{email, copy\_id}, rate, comment, date)}$
 
+> *`Review[rate]` >= `0` && `Review[rate]` <= `10` && `Review[rate] not Null*
+>
 > *`Review[email]` $\subseteq$ `Client[email]`*
 >
 > *`Review[copy_id]` $\subseteq$ `PhotographyCopy[copy_id]`*
 
 $\texttt{Order(\underline{cmd\_id}, email , date, shipping\_addr, billing\_addr, is\_payable\_by\_cheque, is\_payed)}$
 
+> *`Order[email, date, shipping_addr, is_payable_by_cheque, is_payed]` Not Null*
+>
 > *`Order[email]` $\subseteq$ `Client[email]`*
 >
 > *`Order[shipping_addr]` $\subseteq$ `Address[aid]`*
@@ -150,11 +188,23 @@ $\texttt{Order(\underline{cmd\_id}, email , date, shipping\_addr, billing\_addr,
 
 $\texttt{ShoppingCartElem(\underline{elem\_id}, email, copy\_id, quantity, cmd\_id, status, shipping\_date, delivery\_date)}$
 
-> *`ShoppingCartElem[email]` $\subseteq$ `Client[email]`*
+> *`ShoppingCartElem[email, copy_id, quantity, status]` not Null*
 >
-> *`ShoppingCartElem[copy_id]` $\subseteq$ `PhotographyCopy[copy_id]`*
+> *`ShoppingCartElem[shipping_date]` <= `ShoppingCartElem[delivery_date]`*
 >
-> *`ShoppingCartElem[cmd_id]` $\subseteq$ `Order[cmd_id]`*
+> *`ShoppingCartElem[quantity]` > `0`*
+>
+> *`ShoppingCartElem[status]` >= `-1` && `ShoppingCartElem[status]` <= `4`*
+>
+> *`ShoppingCartElem[status]` >= 0 $\rightarrow$ `ShoppingCartElem[cmd_id] not NULL`*
+>
+> *`ShoppingCartElem[status]` >= 2 $\rightarrow$ `ShoppingCartElem[shipping_date, delivery_date] not NULL`*
+>
+> *`ShoppingCartElem[email]` $\subseteq$ `Client[email]` && not Null*
+>
+> *`ShoppingCartElem[copy_id]` $\subseteq$ `PhotographyCopy[copy_id]` && not Null*
+>
+> *`ShoppingCartElem[cmd_id]` $\subseteq$ `Order[cmd_id]`k*
 
 $\texttt{Return(\underline{elem\_id, cmd\_id}, date, issue)}$
 
