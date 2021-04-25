@@ -13,15 +13,15 @@ create table photographer (
     photographer_id serial,
     firstname varchar(50) NOT NULL,
     lastname varchar(50) NOT NULL,
-    phone varchar(10),
+    phone varchar(10) unique,
     primary key (photographer_id)
 );
 
 create table photography (
     pid serial,
     title varchar (100) NOT NULL,
-    photographer_id integer NOT NULL,
-    url varchar (100) NOT NULL,
+    photographer_id integer,
+    url varchar (500) NOT NULL,
     print_price integer NOT NULL,
     digital_price integer NOT NULL,
     creation_date timestamp NOT NULL,
@@ -33,7 +33,7 @@ create table photography (
 
 create table photographycopy (
     copy_id serial,
-    pid integer NOT NULL,
+    pid integer,
     photo_type integer NOT NULL , /*Changement type -> photography_type*/
     format varchar (50) ,
     photo_size varchar (50), /*Changement size -> photo_size*/
@@ -111,8 +111,8 @@ create table shoppingcartelem (
     elem_id serial,
     email varchar (100),
     copy_id integer,
-    cmd_id integer,
     quantity integer NOT NULL,
+    cmd_id integer,
     status integer NOT NULL,
     shipping_date timestamp,
     delivery_date timestamp,
