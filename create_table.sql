@@ -20,7 +20,7 @@ create table photographer (
 create table photography (
     pid serial,
     title varchar (100) NOT NULL,
-    photographer_id integer,
+    photographer_id integer NOT NULL,
     url varchar (500) NOT NULL,
     print_price integer NOT NULL,
     digital_price integer NOT NULL,
@@ -33,7 +33,7 @@ create table photography (
 
 create table photographycopy (
     copy_id serial,
-    pid integer,
+    pid integer NOT NULL,
     photo_type integer NOT NULL , /*Changement type -> photography_type*/
     format varchar (50) ,
     photo_size varchar (50), /*Changement size -> photo_size*/
@@ -109,8 +109,8 @@ create table command ( /*Changement order -> command*/
 
 create table shoppingcartelem (
     elem_id serial,
-    email varchar (100),
-    copy_id integer,
+    email varchar (100) NOT NULL,
+    copy_id integer NOT NULL,
     quantity integer NOT NULL,
     cmd_id integer,
     status integer NOT NULL,
