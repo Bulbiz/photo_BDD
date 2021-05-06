@@ -36,14 +36,14 @@ create table photographycopy (
     pid integer NOT NULL,
     photo_type integer NOT NULL , /*Changement type -> photography_type*/
     format varchar (50) ,
-    photo_size varchar (50), /*Changement size -> photo_size*/
+    photo_size varchar (50), -- Changement size -> photo_size
     is_available boolean,
     deadline timestamp,
     quantity integer,
     primary key (copy_id),
     foreign key (pid) references photography(pid),
-    check (photo_type in (0,1)), /* 1 = Digital, 0 = Print*/
-    check (not (photo_type = 1) or not (format is NULL)), /* a -> b = not a or b */
+    check (photo_type in (0,1)), -- 1 = Digital, 0 = Print
+    check (not (photo_type = 1) or not (format is NULL)), -- a -> b = not a or b
     check (not (photo_type = 0) or not (photo_size is NULL)),
     check (photo_type = 1 or ((is_available and quantity > 0 ) or (not is_available and quantity = 0))),
     check (deadline is NULL or (not is_available))
@@ -51,7 +51,7 @@ create table photographycopy (
 
 create table pricehistory (
     pid integer,
-    change_date timestamp, /*Changement date -> change_date*/
+    change_date timestamp, -- Changement date -> change_date
     print_price integer NOT NULL,
     digital_price integer NOT NULL,
     primary key (pid, change_date),
@@ -85,7 +85,7 @@ create table review (
     email varchar(100),
     copy_id integer,
     rate integer NOT NULL,
-    remark text, /*Changement comment -> remark*/
+    remark text, -- Changement comment -> remark
     review_date timestamp,
     primary key (email, copy_id),
     foreign key (email) references client(email),
@@ -93,10 +93,10 @@ create table review (
     check (0 <= rate and rate <= 10)
 );
 
-create table command ( /*Changement order -> command*/
+create table command ( -- Changement order -> command
     cmd_id serial,
     email varchar (100) NOT NULL,
-    command_date timestamp NOT NULL, /*Changement date -> command_date*/
+    command_date timestamp NOT NULL, -- Changement date -> command_date
     shipping_addr integer NOT NULL,
     billing_addr integer,
     is_payable_by_cheque boolean NOT NULL,
@@ -120,7 +120,7 @@ create table shoppingcartelem (
     foreign key (email) references client(email),
     foreign key (copy_id) references photographycopy(copy_id),
     foreign key (cmd_id) references command(cmd_id),
-    check (-1 <= status and status <= 4), /* -1 = Not ordered, 0 = Pending, 1 = Preparing, 2 = InDelivery, 3 = Delivered, 4 = Cancelled*/
+    check (-1 <= status and status <= 4), --  -1 = Not ordered, 0 = Pending, 1 = Preparing, 2 = InDelivery, 3 = Delivered, 4 = Cancelled
     check (not (status >= 0) or not (cmd_id is NULL)),
     check (not (status >= 2) or (not (shipping_date is NULL))),
     check (not (status >= 3) or (not (delivery_date is NULL))),
@@ -128,10 +128,10 @@ create table shoppingcartelem (
     check (0 <= quantity)
 );
 
-create table return_product ( /*Changement return -> return_product*/
+create table return_product ( -- Changement return -> return_product
     elem_id integer,
     cmd_id integer,
-    return_date timestamp not NULL, /*Changement date -> return_date*/
+    return_date timestamp not NULL, -- Changement date -> return_date
     issue text,
     primary key (elem_id,cmd_id),
     foreign key (elem_id) references shoppingcartelem(elem_id),
