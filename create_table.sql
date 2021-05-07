@@ -34,7 +34,7 @@ create table photography (
 create table photographycopy (
     copy_id serial,
     pid integer NOT NULL,
-    photo_type integer NOT NULL , /*Changement type -> photography_type*/
+    photo_type integer NOT NULL , -- Changement type -> photography_type
     format varchar (50) ,
     photo_size varchar (50), -- Changement size -> photo_size
     is_available boolean,
@@ -42,8 +42,8 @@ create table photographycopy (
     quantity integer,
     primary key (copy_id),
     foreign key (pid) references photography(pid),
-    check (photo_type in (0,1)), -- 1 = Digital, 0 = Print
-    check (not (photo_type = 1) or not (format is NULL)), -- a -> b = not a or b
+    check (photo_type in (0,1)), --  1 = Digital, 0 = Print
+    check (not (photo_type = 1) or not (format is NULL)),
     check (not (photo_type = 0) or not (photo_size is NULL)),
     check (photo_type = 1 or ((is_available and quantity > 0 ) or (not is_available and quantity = 0))),
     check (deadline is NULL or (not is_available))
@@ -64,7 +64,7 @@ create table address (
     street_nb integer NOT NULL,
     street_name varchar (100) NOT NULL,
     city varchar (100) NOT NULL,
-    departement varchar (100) NOT NULL,
+    country varchar (100) NOT NULL,
     primary key (aid),
     check (street_nb >= 0)
 );
