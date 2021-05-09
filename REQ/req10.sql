@@ -1,4 +1,5 @@
--- "Affiche le client ayant fait le plus de commande sur le site"
+-- Requête 10 :  "Récupère le client ayant fait le plus de commande sur le site."
+
 SELECT clt.firstname,
        clt.lastname,
        COUNT(cmd.email) AS number_of_command

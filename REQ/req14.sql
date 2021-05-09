@@ -8,4 +8,3 @@ FROM shoppingcartelem s
 LEFT JOIN command c ON (s.cmd_id = c.cmd_id)
 WHERE s.status < 2;
 -- AND s.cmd_id is not  NULL; A rajouter pour supprimer les NULLs.
--- NOTE (emile): est-ce ce qui est attendu comme petites modifications ?

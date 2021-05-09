@@ -3,9 +3,9 @@
 -- -> GROUP BY + HAVING
 
 SELECT pid,
-       avg(digital_price) AS Average_digital_price,
-       avg(print_price) AS Average_print_price
+       CAST(AVG(digital_price) AS DECIMAL(10,2)) AS Average_digital_price,
+       CAST(AVG(print_price) AS DECIMAL(10,2)) AS Average_print_price
 FROM pricehistory
 GROUP BY pid
-HAVING min(digital_price) > 70
-OR min(print_price) > 70;
+HAVING MIN(digital_price) > 70
+OR MIN(print_price) > 70;

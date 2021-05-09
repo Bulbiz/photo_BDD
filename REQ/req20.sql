@@ -1,4 +1,5 @@
--- Requête 20 : "Récupère les copies de photographies apparaissant dans plusieurs commandes différentes et qui n'ont jamais été retournés."
+-- Requête 20 : "Récupère les copies de photographies apparaissant dans
+--               plusieurs commandes différentes et qui n'ont jamais été retournées."
 
 SELECT DISTINCT s1.copy_id
 FROM shoppingcartelem s1,

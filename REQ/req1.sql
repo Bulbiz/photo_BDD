@@ -1,5 +1,5 @@
--- "Affiche tout les commentaires concernant les photographie du photographe numéro 2"
--- -> Requête sur au moins 3 tables
+-- Requête 1 : "Récupère tous les commentaires concernant les photographies du photographe numéro 2"
+
 SELECT photography.title,
        review_date,
        rate,

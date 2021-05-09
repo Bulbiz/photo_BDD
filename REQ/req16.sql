@@ -5,4 +5,4 @@ SELECT p.pid,
 FROM pricehistory h
 JOIN photography p ON p.pid = h.pid
 GROUP BY p.pid
-HAVING count(p.pid) >= 3;
+HAVING COUNT(p.pid) >= 3;

@@ -4,13 +4,12 @@
 
 SELECT pid,
        CASE
-           WHEN sum(c.quantity) / sum(s.quantity) > 100 THEN 'low'
-           WHEN sum(c.quantity) / sum(s.quantity) > 10 THEN 'normal'
+           WHEN sum(c.quantity) / sum(s.quantity) > 10 THEN 'low'
+           WHEN sum(c.quantity) / sum(s.quantity) > 1 THEN 'normal'
            ELSE 'high'
        END AS risk_of_stockout
 FROM shoppingcartelem s
 JOIN photographycopy c ON s.copy_id = c.copy_id
 WHERE c.photo_type = 0
 GROUP BY pid
-ORDER BY risk_of_stockout,
-         pid;
+ORDER BY sum(c.quantity) / sum(s.quantity);
