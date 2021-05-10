@@ -34,9 +34,9 @@ create table photography (
 create table photographycopy (
     copy_id serial,
     pid integer NOT NULL,
-    photo_type integer NOT NULL , -- Changement type -> photography_type
+    photo_type integer NOT NULL ,
     format varchar (50) ,
-    photo_size varchar (50), -- Changement size -> photo_size
+    photo_size varchar (50),
     is_available boolean,
     deadline timestamp,
     quantity integer,
@@ -51,7 +51,7 @@ create table photographycopy (
 
 create table pricehistory (
     pid integer,
-    change_date timestamp, -- Changement date -> change_date
+    change_date timestamp,
     print_price integer NOT NULL,
     digital_price integer NOT NULL,
     primary key (pid, change_date),
@@ -85,7 +85,7 @@ create table review (
     email varchar(100),
     copy_id integer,
     rate integer NOT NULL,
-    remark text, -- Changement comment -> remark
+    remark text,
     review_date timestamp,
     primary key (email, copy_id),
     foreign key (email) references client(email),
@@ -93,10 +93,10 @@ create table review (
     check (0 <= rate and rate <= 10)
 );
 
-create table command ( -- Changement order -> command
+create table command (
     cmd_id serial,
     email varchar (100) NOT NULL,
-    command_date timestamp NOT NULL, -- Changement date -> command_date
+    command_date timestamp NOT NULL,
     shipping_addr integer NOT NULL,
     billing_addr integer,
     is_payable_by_cheque boolean NOT NULL,
@@ -128,13 +128,12 @@ create table shoppingcartelem (
     check (0 <= quantity)
 );
 
-create table return_product ( -- Changement return -> return_product
+create table return_product (
     elem_id integer,
     cmd_id integer,
-    return_date timestamp not NULL, -- Changement date -> return_date
+    return_date timestamp not NULL,
     issue text,
     primary key (elem_id,cmd_id),
     foreign key (elem_id) references shoppingcartelem(elem_id),
     foreign key (cmd_id) references command(cmd_id)
 );
-
