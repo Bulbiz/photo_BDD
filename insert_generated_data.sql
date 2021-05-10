@@ -1,0 +1,10 @@
+\copy photographer FROM 'csv/generated_data/photographer.csv' WITH csv;
+\copy photography FROM 'csv/generated_data/photography.csv' WITH csv;
+\copy photographycopy FROM 'csv/generated_data/photographycopy.csv' WITH csv;
+\copy pricehistory FROM 'csv/generated_data/pricehistory.csv' WITH csv;
+\copy address FROM 'csv/generated_data/address.csv' WITH csv;
+\copy client FROM 'csv/generated_data/client.csv' WITH csv;
+\copy command FROM 'csv/generated_data/command.csv' WITH csv;
+\copy shoppingcartelem FROM 'csv/generated_data/shoppingcartelem.csv' WITH csv;
+\copy review FROM 'csv/generated_data/review.csv' WITH csv;
+\copy return_product FROM 'csv/generated_data/returnproduct.csv' WITH csv;
