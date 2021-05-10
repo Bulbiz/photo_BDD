@@ -39,9 +39,9 @@ Complété des contraintes externes suivantes :
 
 * Un$\cdot$une client$\cdot$e (`Client`) peut émettre un commentaire (`Review`) sur une copie de photographie (`PhotographyCopy`)
 uniquement si il$\cdot$elle l'a déjà reçu (`Delivered`).
-* Seuls les produits délivrés (`Delivered`) peuvent être retournés (`Return`).
+* Seuls les produits délivrés (`Delivered`) peuvent être retournés (`ReturnProduct`).
 * La date d'expédition doit être inférieur à la date de réception : `Delivered.shipping_date` < `Delivered.received_date`.
-* Si l'adresse de facturation (`Order.billing_addr`) n'est pas renseignée, l'adresse d'expédition (`Order.shipping_addr`) est utilisée.
+* Si l'adresse de facturation (`Command.billing_addr`) n'est pas renseignée, l'adresse d'expédition (`Command.shipping_addr`) est utilisée.
 * Un élément d'un panier (`ShoppingCartElem`) peut être annulé (`Cancelled`) seulement si il est en attente (`Pending`) ou en préparation (`Preparing`).
 * Lorsqu'une copie est ajoutée dans un panier comme élément (`ShoppingCartElem`) : `AvailableInStock.quantity` -= `ShoppingCartElem.quantity`
 * Lorsqu'un élément du panier (`ShoppingCartElem`) est annulé (`Cancelled`) : `AvailableInStock.quantity` += `ShoppingCartElem.quantity`
@@ -73,7 +73,7 @@ Les contraintes suivantes sont également ajoutées :
 
 * Si `Print.is_available = true` alors si `Print.quantity > 0` la copie (`PhotographyCopy`) est considérée comme `AvailableInStock`
 sinon `Available`. De plus si `Print.is_available = false` alors la copie (`PhotographyCopy`) est considérée comme `Unavailable`.
-* Significations des valeurs de `Ordered.status` :
+* Significations des valeurs de `Oredered.status` :
   * 0 $\rightarrow$ `Pending`.
   * 1 $\rightarrow$ `Preparing`.
   * 2 $\rightarrow$ `InDelivery`.
@@ -83,14 +83,14 @@ sinon `Available`. De plus si `Print.is_available = false` alors la copie (`Phot
 \newpage
 
 La deuxième étape permet la restructuration des spécialisations :
-`NotOredered`, `Ordered`, `Print` et `Digital`.
+`NotOredered`, `Oredered`, `Print` et `Digital`.
 
 ![Diagramme E/R après la seconde restructuration
 (en vert les attributs ajoutés).](../images/restructuration2.png)
 
 Les contraintes suivantes sont alors ajoutées :
 
-* Significations des valeurs de `PhotographyCopy.type` :
+* Significations des valeurs de `PhotographyCopy.photo_type` :
   * 0 $\rightarrow$ `Print`.
   * 1 $\rightarrow$ `Digital`.
 * Les valeurs de `ShoppingCartElem.status` possèdent les même significations que pour `Oredered.status`,
@@ -103,7 +103,7 @@ avec en plus :
 ### Suppressions des relations
 
 Après la restructuration des spécialisations, nous pouvons supprimer les relations :
-`Return` et `Review`.
+`ReturnProduct` et `Review`.
 
 ![Tables après la suppressions des relations.](../images/tables.png)
 
@@ -127,17 +127,17 @@ $\texttt{Photography(\underline{pid}, title, photographer\_id, url, curr\_price,
 >
 > *`Photography[curr_price]` $>$ `0`*
 
-$\texttt{PhotographyCopy(\underline{copy\_id}, pid, type, format, size, is\_available, deadline, quantity)}$
+$\texttt{PhotographyCopy(\underline{copy\_id}, pid, photo\_type, format, photo\_size, is\_available, deadline, quantity)}$
 
 > *`PhotographyCopy[pid]` $\subseteq$ `Photography[pid]`*
 >
-> *`PhotographyCopy[pid, type]` not `NULL`*
+> *`PhotographyCopy[pid, photo_type]` not `NULL`*
 >
-> *`0` $\leq$ `PhotographyCopy[type]` $\leq$ `1`*
+> *`0` $\leq$ `PhotographyCopy[photo_type]` $\leq$ `1`*
 >
-> *(`PhotographyCopy[type]` $=$ `1`) $\rightarrow$ (`PhotographyCopy[format]` not `NULL`)*
+> *(`PhotographyCopy[photo_type]` $=$ `1`) $\rightarrow$ (`PhotographyCopy[format]` not `NULL`)*
 >
-> *(`PhotographyCopy[type]` $=$ `0`) $\rightarrow$ (`PhotographyCopy[size]` not `NULL`)*
+> *(`PhotographyCopy[photo_type]` $=$ `0`) $\rightarrow$ (`PhotographyCopy[photo_size]` not `NULL`)*
 >
 > *`PhotographyCopy[is_available]` $\rightarrow$ (`PhotographyCopy[quantity]` > `0`)*
 >
@@ -145,7 +145,7 @@ $\texttt{PhotographyCopy(\underline{copy\_id}, pid, type, format, size, is\_avai
 >
 > *(`PhotographyCopy[deadline]` not `NULL`) $\rightarrow$ ($\neg$`PhotographyCopy[is_available]`)*
 
-$\texttt{PriceHistory(\underline{pid, date}, price)}$
+$\texttt{PriceHistory(\underline{pid, change\_date}, price)}$
 
 > *`PriceHistory[pid]` $\subseteq$ `Photography[pid]`*
 >
@@ -163,7 +163,7 @@ $\texttt{Client(\underline{email}, password, firstname, lastname, address, phone
 >
 > *`Client[adresse, password, firstname, lastname, registration_date]` not `NULL`*
 
-$\texttt{Review(\underline{email, copy\_id}, rate, comment, date)}$
+$\texttt{Review(\underline{email, copy\_id}, rate, comment, review\_date)}$
 
 > *`Review[email]` $\subseteq$ `Client[email]`*
 >
@@ -171,15 +171,15 @@ $\texttt{Review(\underline{email, copy\_id}, rate, comment, date)}$
 >
 > *(`0` $\leq$ `Review[rate]` $\leq$ `10`) $\wedge$ (`Review[rate] not `NULL`)*
 
-$\texttt{Order(\underline{cmd\_id}, email , date, shipping\_addr, billing\_addr, is\_payable\_by\_cheque, is\_payed)}$
+$\texttt{Command(\underline{cmd\_id}, email , command\_date, shipping\_addr, billing\_addr, is\_payable\_by\_cheque, is\_payed)}$
 
-> *`Order[email]` $\subseteq$ `Client[email]`*
+> *`Command[email]` $\subseteq$ `Client[email]`*
 >
-> *`Order[shipping_addr]` $\subseteq$ `Address[aid]`*
+> *`Command[shipping_addr]` $\subseteq$ `Address[aid]`*
 >
-> *`Order[billing_addr]` $\subseteq$ `Address[aid]`*
+> *`Command[billing_addr]` $\subseteq$ `Address[aid]`*
 >
-> *`Order[email, date, shipping_addr, is_payable_by_cheque, is_payed]` not `NULL`*
+> *`Command[email, command_date, shipping_addr, is_payable_by_cheque, is_payed]` not `NULL`*
 
 $\texttt{ShoppingCartElem(\underline{elem\_id}, email, copy\_id, quantity, cmd\_id, status, shipping\_date, delivery\_date)}$
 
@@ -187,7 +187,7 @@ $\texttt{ShoppingCartElem(\underline{elem\_id}, email, copy\_id, quantity, cmd\_
 >
 > *`ShoppingCartElem[copy_id]` $\subseteq$ `PhotographyCopy[copy_id]`*
 >
-> *`ShoppingCartElem[cmd_id]` $\subseteq$ `Order[cmd_id]`*
+> *`ShoppingCartElem[cmd_id]` $\subseteq$ `Command[cmd_id]`*
 >
 > *`ShoppingCartElem[email, copy_id, quantity, status]` not `NULL`*
 >
@@ -201,10 +201,10 @@ $\texttt{ShoppingCartElem(\underline{elem\_id}, email, copy\_id, quantity, cmd\_
 >
 > *(`ShoppingCartElem[status]` $\geq$ `2`) $\rightarrow$ (`ShoppingCartElem[shipping_date, delivery_date]` not `NULL`)*
 
-$\texttt{Return(\underline{elem\_id, cmd\_id}, date, issue)}$
+$\texttt{ReturnProduct(\underline{elem\_id, cmd\_id}, return\_date, issue)}$
 
-> *`Return[elem_id]` $\subseteq$ `ShoppingCartElem[elem_id]`*
+> *`ReturnProduct[elem_id]` $\subseteq$ `ShoppingCartElem[elem_id]`*
 >
-> *`Return[cmd_id]` $\subseteq$ `Order[cmd_id]`*
+> *`ReturnProduct[cmd_id]` $\subseteq$ `Command[cmd_id]`*
 
 ---
