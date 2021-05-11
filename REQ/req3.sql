@@ -1,4 +1,4 @@
--- Requête 3 : "Récupère les photographies ayant une note moyenne suppérieur ou égale à 5."
+-- Requête 3 : "Récupère les photographies ayant une note moyenne supérieure ou égale à 5."
 
 SELECT pid AS photo_id,
        title,

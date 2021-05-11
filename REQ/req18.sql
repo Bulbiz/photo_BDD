@@ -1,4 +1,4 @@
--- Requête 18 : "Récupère les 5 titres des photographies dont leur copies on été les dernières à être envoyées."
+-- Requête 18 : "Récupère les 5 titres des photographies dont leurs copies ont été les dernières à être envoyées."
 
 SELECT title,
        shipping_date

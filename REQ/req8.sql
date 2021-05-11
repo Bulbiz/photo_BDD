@@ -1,4 +1,4 @@
--- Requête 8 : "Récupère tous les client-e-s habitant à Hollywood ainsi que leur nombre de commandes."
+-- Requête 8 : "Récupère tou-te-s les client-e-s habitant à Hollywood ainsi que leur nombre de commande."
 
 SELECT client.email,
        client.firstname,

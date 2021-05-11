@@ -1,4 +1,4 @@
--- Requête 9 : "Récupère les titres et les prix maximaux atteint par les photographies."
+-- Requête 9 : "Récupère les titres et les prix maximaux atteint par chaque photographie."
 
 SELECT title,
        MAX(h.digital_price) AS max_digital_price,
