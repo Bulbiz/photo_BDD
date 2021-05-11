@@ -1,6 +1,7 @@
 --  Requête 4 : "Récupère le nom des photographes ayant une note de review
---               moyenne pour ses photographies suppérieur à la moyenne de toutes les notes
+--               moyenne pour ses photographies supérieures à la moyenne de toutes les notes
 --               de review."
+
 SELECT CONCAT(firstname, ' ', lastname) as photographe_name,
        CAST(AVG(r1.rate) AS DECIMAL(4, 2)) AS avg_rate
 FROM photographer artist

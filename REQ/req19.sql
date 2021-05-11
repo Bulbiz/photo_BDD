@@ -1,4 +1,4 @@
--- Requête 19 : "Récupère le nom de tous les photographes ayant aucune review inférieur à 5."
+-- Requête 19 : "Récupère le nom de tous les photographes n'ayant reçu aucune review inférieur à 5."
 
 SELECT DISTINCT CONCAT(pher.firstname, ' ', pher.lastname) AS photographer_name
 FROM photographer pher

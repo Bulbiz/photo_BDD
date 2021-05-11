@@ -1,5 +1,5 @@
 -- Requête 15 : "Récupère le numéro de commande ainsi que le statut de paiement de toutes
---               les commandes n'ayant pas encore quitté le dépôt."
+--               les commandes n'ayant pas encore quittées le dépôt."
 -- -> RIGHT JOIN + résultats différents en fonction des NULLs (voir req14.sql).
 
 SELECT DISTINCT s.cmd_id,

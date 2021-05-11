@@ -1,4 +1,5 @@
--- Requête 2 : "Calcule la moyenne des sommes des copies imprimable de chaque panier commandé."
+-- Requête 2 : "Récupère la moyenne des prix totaux de chaque copie imprimable
+--              pour chaque panier commandé."
 
 SELECT AVG(cmd_print_price_sums.print_price_sum) AS avg_amount_cmd
 FROM

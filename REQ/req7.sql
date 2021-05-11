@@ -1,5 +1,6 @@
 -- Requête 7 : "Récupère le nom du photographe avec le plus d'article dans un panier,
 --              c'est-à-dire le ou la plus populaire."
+
 SELECT CONCAT(firstname, ' ', lastname) as photographe_name,
        COUNT(s.elem_id) AS number_of_command
 FROM shoppingcartelem s

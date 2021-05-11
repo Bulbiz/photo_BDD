@@ -12,7 +12,6 @@ AS $func$
       SELECT DISTINCT s.elem_id
       FROM shoppingcartelem s
       WHERE s.cmd_id = $1
-        AND s.cmd_id IS NOT NULL
     LOOP
       RETURN QUERY EXECUTE
         -- Pour chaque éléments,
@@ -24,8 +23,7 @@ AS $func$
                   h.change_date
         FROM command c
         JOIN shoppingcartelem s ON (c.cmd_id = '|| $1 || '
-                                    AND s.cmd_id = c.cmd_id
-                                    AND s.cmd_id IS NOT NULL)
+                                    AND s.cmd_id = c.cmd_id)
         JOIN photographycopy pc ON pc.copy_id = s.copy_id
         JOIN pricehistory h ON h.pid = pc.pid
         WHERE c.command_date > h.change_date

@@ -1,5 +1,4 @@
 -- Requête 11 : "Récupère les villes contenant plusieurs adresses différentes".
--- -> Auto jointure + GROUP BY
 
 SELECT a1.city
 FROM address a1,
